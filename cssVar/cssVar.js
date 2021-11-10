@@ -18,10 +18,17 @@ const isStyleRule = (rule) => rule.type === 1;
 export default class CssVar {
   //Selector of the element which have the CSS variables defined
   selector;
-  styles;
+  variables;
 
   //Default constructor to set the :root as selector
   constructor(selector = ":root") {
+    this.refreshVariables();
+
+    this.selector = selector;
+  }
+
+  //Setup the variables
+  refreshVariables = () => {
     //Get all the stylesheets.(Exclude the Cross Origin stylesheets to avoid security errors)
     let stylesheets = [...document.styleSheets].filter(isSameDomain);
 
@@ -71,14 +78,13 @@ export default class CssVar {
       }
     }
 
-    this.styles = styleObject;
-    this.selector = selector;
-  }
+    this.variables = styleObject;
+  };
 
   //Check if the variable is global or not
   isGlobal = (property) => {
     try {
-      for (let variable of this.styles[":root"]) {
+      for (let variable of this.variables[":root"]) {
         if (variable.name === property) {
           return true;
         }
@@ -91,7 +97,21 @@ export default class CssVar {
   };
 
   //Console log all the css variables available
-  log = () => {
-    console.log(this.styles);
+  log = (selector) => {
+    this.refreshVariables();
+
+    //Based on parameter check log the variable in console
+    if (selector) {
+      if (this.variables[selector] && this.variables[selector].length > 0) {
+        console.log(this.variables[selector]);
+      } else {
+        console.log("No CSS variables available for the selector");
+      }
+    } else {
+      console.log(this.variables);
+    }
   };
+
+  //Get the current value of a property
+  get = () => {};
 }
