@@ -105,7 +105,7 @@ export default class CssVar {
       if (this.variables[selector] && this.variables[selector].length > 0) {
         console.log(this.variables[selector]);
       } else {
-        console.log("No CSS variables available for the selector");
+        console.log("CssVar: No CSS variables available for the selector");
       }
     } else {
       console.log(this.variables);
@@ -113,5 +113,40 @@ export default class CssVar {
   };
 
   //Get the current value of a property
-  get = () => {};
+  get = (varname, selector) => {
+    this.refreshVariables();
+
+    if (varname && selector) {
+      try {
+        for (let variable of this.variables[selector]) {
+          if (variable.name === varname) {
+            return variable.value;
+          }
+        }
+        console.log(
+          "CssVar: Variable with the given selector and name not found"
+        );
+      } catch (e) {
+        console.log(
+          "CssVar: Variable with the given selector and name not found"
+        );
+      }
+    } else if (varname && !selector) {
+      try {
+        for (let index in this.variables) {
+          for (let variable of this.variables[index]) {
+            if (variable.name === varname) {
+              return variable.value;
+            }
+          }
+        }
+
+        console.log("CssVar: Variable with the given name not found");
+      } catch (e) {
+        console.log("CssVar: Variable with the given name not found");
+      }
+    } else {
+      return this.variables;
+    }
+  };
 }
