@@ -179,7 +179,8 @@ export default class CssVar {
     }
 
     if (!value) {
-      value = "";
+      //If no value given, erase the current data of that variable by assigning it with a whitespace ' '
+      value = " ";
     }
 
     if (selector) {
