@@ -1,5 +1,10 @@
-//Check if the stylesheet is of same domain to avoid security errors
-/*Only stylesheeets of the same domain are used with this tool */
+/**
+ * Check if the stylesheet is of same domain to avoid security errors
+ * Only stylesheeets of the same domain are used with this tool
+ *
+ * @param {StyleSheet} Stylesheet Object containing information about a particular stylesheet
+ * @returns Boolean: true if the stylesheet is in the same origin, else return false
+ */
 const isSameDomain = (styleSheet) => {
   if (!styleSheet.href) {
     return true;
@@ -8,20 +13,43 @@ const isSameDomain = (styleSheet) => {
   return styleSheet.href.indexOf(window.location.origin) === 0;
 };
 
-//Check if the style is CSSRule type (To avoid other types as Media Query, Import Statement rules, etc)
+/**
+ * Check if the style is CSSRule type (To avoid other types as Media Query, Import Statement rules, etc)
+ *
+ * @param {CSSStyleRule} rule CSS Rule object with all details about a CSS block
+ * @returns True if the CssRule is of type styleRule(type=1), else return false
+ */
 const isStyleRule = (rule) => rule.type === 1;
 
-//Check if the CSS property is a variabrl declaration
+//
+/**
+ * Check if the CSS property is a variable declaration by checking the first part of the CSS property
+ *
+ * @param {String} cssProperty Css Property name
+ * @returns True if the CSS property is a CSS variable declaration, else return false
+ */
 const isVariable = (cssProperty) => {
   return cssProperty.startsWith("--");
 };
 
-//Set the CSS property
+/**
+ * Set a particular CSS variable with given name, value selector text
+ *
+ * @param {String} selector Selector text for getting the particular element
+ * @param {String} name Name of the CSS variable
+ * @param {String} value  New value to set
+ */
 const setVariable = (selector = ":root", name, value) => {
   let element = document.querySelector(selector);
   element.style.setProperty("--" + name, value);
 };
 
+/**
+ *
+ * @param {String} selector Selector text to get the particular element from the DOM
+ * @param {String} name Name of the CSS vaiable to fetch from the given selector element
+ * @returns The value of the particular CSS variable with the given selector and name
+ */
 const getVariable = (selector, name) => {
   try {
     let element = document.querySelector(selector);
@@ -36,11 +64,12 @@ const getVariable = (selector, name) => {
 //=======================================================================================================================
 //=======================================================================================================================
 
-//CssVar main class with helper methods
+/**
+ * Main class of the library with the methods to work with CSS variables
+ */
 export default class CssVar {
-  //Selector of the element which have the CSS variables defined
-  selector;
-  variables;
+  selector; //Selector text, Initialized when creating the object
+  variables; //An object containing all the selectors and their corresponding CSS variables
 
   //Default constructor to set the :root as selector
   constructor(selector = ":root") {
@@ -49,7 +78,9 @@ export default class CssVar {
     this.selector = selector;
   }
 
-  //Setup the variables
+  /**
+   * Refresh the variables and set the variables member of the class
+   */
   refreshVariables = () => {
     //Get all the stylesheets.(Exclude the Cross Origin stylesheets to avoid security errors)
     let stylesheets = [...document.styleSheets].filter(isSameDomain);
@@ -98,7 +129,11 @@ export default class CssVar {
     this.variables = styleObject;
   };
 
-  //Check if the variable is global or not
+  /**
+   *
+   * @param {Object} property And object with name and value of a particular CSS variable
+   * @returns True if the variable is a global variable, else return false
+   */
   isGlobal = (property) => {
     try {
       for (let variable of this.variables[":root"]) {
@@ -113,7 +148,12 @@ export default class CssVar {
     }
   };
 
-  //Console log all the css variables available
+  /**
+   * Log all the CSS variables if no selector is passed or If the selector is passed, then log all the variable
+   * in that particular selector
+   *
+   * @param {String} selector (Optional) Selector used to scope the variable
+   */
   log = (selector) => {
     this.refreshVariables();
 
@@ -129,7 +169,12 @@ export default class CssVar {
     }
   };
 
-  //Get the current value of a property
+  /**
+   *
+   * @param {String} varname Name of the CSS variable without "--"
+   * @param {String} selector (Optional) Selector text to select the scoped CSS variables
+   * @returns The value of the CSS variable or NULL in case of errors
+   */
   get = (varname, selector) => {
     this.refreshVariables();
 
@@ -167,7 +212,14 @@ export default class CssVar {
     }
   };
 
-  //Set the value for a variable
+  /**
+   * Set the particular CSS variable with given name and value
+   *
+   * @param {String} varname Name of the CSS variable
+   * @param {String} value New value to set for the variable
+   * @param {String} selector CSS selector to scope the variable
+   * @returns
+   */
   set = (varname, value, selector) => {
     this.refreshVariables();
 
