@@ -67,11 +67,15 @@ const getVariable = (selector, name) => {
 /**
  * Main class of the library with the methods to work with CSS variables
  */
-export default class CssVar {
+class CssVar {
   selector; //Selector text, Initialized when creating the object
   variables; //An object containing all the selectors and their corresponding CSS variables
 
-  //Default constructor to set the :root as selector
+  /**
+   * Create a new instance of the CSSVar object with given selector text
+   *
+   * @param {String} selector Selector text used as default selector. Default is ":root"
+   */
   constructor(selector = ":root") {
     this.refreshVariables();
 
@@ -267,3 +271,5 @@ export default class CssVar {
     }
   };
 }
+
+export default CssVar;

@@ -2,7 +2,7 @@
   "name": "cssvar",
   "version": "1.0.0",
   "description": "Css Variable Helper",
-  "main": "index.js",
+  "main": "cssVar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
