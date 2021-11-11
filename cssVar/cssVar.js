@@ -11,6 +11,28 @@ const isSameDomain = (styleSheet) => {
 //Check if the style is CSSRule type (To avoid other types as Media Query, Import Statement rules, etc)
 const isStyleRule = (rule) => rule.type === 1;
 
+//Check if the CSS property is a variabrl declaration
+const isVariable = (cssProperty) => {
+  return cssProperty.startsWith("--");
+};
+
+//Set the CSS property
+const setVariable = (selector = ":root", name, value) => {
+  let element = document.querySelector(selector);
+  element.style.setProperty("--" + name, value);
+};
+
+const getVariable = (selector, name) => {
+  try {
+    let element = document.querySelector(selector);
+    let computedStyle = getComputedStyle(element);
+
+    return computedStyle.getPropertyValue("--" + name).trim();
+  } catch (e) {
+    return null;
+  }
+};
+
 //=======================================================================================================================
 //=======================================================================================================================
 
@@ -49,31 +71,26 @@ export default class CssVar {
         styleObject[selectorText] = [];
       }
 
-      const cssProperties = [...style.style]
-        .map((propName) => {
-          return {
-            name: propName.trim(),
-            value: style.style.getPropertyValue(propName).trim(),
-          };
-        })
-        //Only picking the CSS variables
-        .filter((property) => {
-          if (property.name.startsWith("--")) {
-            return property;
-          }
-        })
-        //Remove the -- prefix in the CSS variable
-        .map((property) => {
-          property.name = property.name.slice(2);
-          return property;
+      //Removing CSS properties other than CSS variable declarations
+      let variables = [...style.style].filter(isVariable);
+      let variableObjects = [];
+
+      //Getting the value for each variable and generating an object
+      for (let variable of variables) {
+        let name = variable.trim().slice(2);
+
+        variableObjects.push({
+          name: name,
+          value: getVariable(selectorText, name),
         });
+      }
 
       styleObject[selectorText] = [
         ...styleObject[selectorText],
-        ...cssProperties,
+        ...variableObjects,
       ];
 
-      if (styleObject[selectorText].length === 0) {
+      if (styleObject[selectorText].length < 1) {
         delete styleObject[selectorText];
       }
     }
@@ -147,6 +164,53 @@ export default class CssVar {
       }
     } else {
       return this.variables;
+    }
+  };
+
+  //Set the value for a variable
+  set = (varname, value, selector) => {
+    this.refreshVariables();
+
+    if (!varname) {
+      console.log(
+        "CssVar: Variable Name is mandatory parameters for set() method"
+      );
+      return;
+    }
+
+    if (!value) {
+      value = "";
+    }
+
+    if (selector) {
+      try {
+        for (let variable of this.variables[selector]) {
+          if (variable.name === varname) {
+            setVariable(selector, varname, value);
+            return;
+          }
+        }
+        console.log(
+          "CssVar: Variable with the given selector and name not found"
+        );
+      } catch (e) {
+        console.log("CssVar: Cannot set the value for variable");
+      }
+    } else {
+      try {
+        for (let index in this.variables) {
+          for (let variable of this.variables[index]) {
+            if (variable.name === varname) {
+              setVariable(index, varname, value);
+              return;
+            }
+          }
+        }
+
+        console.log("CssVar: Variable with the given name not found");
+      } catch (e) {
+        console.log("CssVar: Cannot set the value for variable");
+      }
     }
   };
 }
