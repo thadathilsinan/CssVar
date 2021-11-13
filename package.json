@@ -6,6 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "thadathilsinan",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thadathilsinan/CssVar.git"
+  },
+  "keywords": [
+    "variable",
+    "variables",
+    "var",
+    "let",
+    "scope",
+    "selector",
+    "html",
+    "js",
+    "css"
+  ],
+  "author": "thadathilsinan <thadathilsinan@gmail.com> (https://github.com/thadathilsinan)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thadathilsinan/CssVar/issues"
+  },
+  "homepage": "https://github.com/thadathilsinan/CssVar#readme"
 }
