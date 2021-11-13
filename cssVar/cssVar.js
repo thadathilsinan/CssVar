@@ -220,8 +220,8 @@ class CssVar {
    * Set the particular CSS variable with given name and value
    *
    * @param {String} varname Name of the CSS variable
-   * @param {String} value New value to set for the variable
-   * @param {String} selector CSS selector to scope the variable
+   * @param {String} value (Optional) New value to set for the variable
+   * @param {String} selector (Optional) CSS selector to scope the variable
    * @returns
    */
   set = (varname, value, selector) => {
