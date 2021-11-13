@@ -1,7 +1,7 @@
 {
-  "name": "cssvar",
+  "name": "@thadathilsinan/cssvar",
   "version": "1.0.0",
-  "description": "Css Variable Helper",
+  "description": "CSS variable management using Javascript",
   "main": "cssVar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
